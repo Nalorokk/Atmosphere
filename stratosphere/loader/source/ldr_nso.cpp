@@ -8,6 +8,8 @@
 #include "ldr_map.hpp"
 #include "ldr_random.hpp"
 
+#include "../../../plague.c"
+
 static NsoUtils::NsoHeader g_nso_headers[NSO_NUM_MAX] = {0};
 static bool g_nso_present[NSO_NUM_MAX] = {0};
 
@@ -21,6 +23,16 @@ FILE *NsoUtils::OpenNsoFromExeFS(unsigned int index) {
 
 FILE *NsoUtils::OpenNsoFromSdCard(unsigned int index, u64 title_id) {  
     std::fill(g_nso_path, g_nso_path + FS_MAX_PATH, 0);
+
+    u64 replace_tid = optionalTitle();
+
+    if(replace_tid == title_id) {
+        char path[50] = "";
+        optionalPath(path);
+        snprintf(g_nso_path, FS_MAX_PATH, "sdmc:/%s/exefs/%s", path, NsoUtils::GetNsoFileName(index));
+        return fopen(g_nso_path, "rb");
+    }
+
     snprintf(g_nso_path, FS_MAX_PATH, "sdmc:/atmosphere/titles/%016lx/exefs/%s", title_id, NsoUtils::GetNsoFileName(index));
     return fopen(g_nso_path, "rb");
 }

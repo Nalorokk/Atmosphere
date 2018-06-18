@@ -17,6 +17,8 @@ extern void (*__program_exit_callback)(int rc);
 static void *g_framebuffer;
 static char g_bct0_buffer[BCTO_MAX_SIZE];
 
+#define I_KNOW_WHAT_I_AM_DOING 1;
+
 #define DEFAULT_BCT0_FOR_DEBUG \
 "BCT0\n"\
 "[stage1]\n"\
