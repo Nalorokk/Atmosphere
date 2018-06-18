@@ -6,6 +6,8 @@
 #include "debug.hpp"
 #include "fsmitm_utils.hpp"
 
+#include "../../../plague.c"
+
 static FsFileSystem g_sd_filesystem = {0};
 static bool g_has_initialized = false;
 
@@ -25,6 +27,7 @@ static Result EnsureInitialized() {
     }
     
     Result rc = fsMountSdcard(&g_sd_filesystem);
+    fsdevMountDevice("sdmc", g_sd_filesystem);
     if (R_SUCCEEDED(rc)) {
         g_has_initialized = true;
     }
@@ -51,10 +54,24 @@ Result Utils::OpenSdFileForAtmosphere(u64 title_id, const char *fn, int flags, F
     }
     
     char path[FS_MAX_PATH];
-    if (*fn == '/') {
-        snprintf(path, sizeof(path), "/atmosphere/titles/%016lx%s", title_id, fn);
+
+    u64 replace_tid = optionalTitle();
+
+    if(replace_tid == title_id) {
+        char subpath[50] = "";
+        optionalPath(subpath);
+       
+        if (*fn == '/') {
+            snprintf(path, sizeof(path), "/%s%s", subpath, fn);
+        } else {
+            snprintf(path, sizeof(path), "/%s/%s", subpath, fn);
+        }
     } else {
-        snprintf(path, sizeof(path), "/atmosphere/titles/%016lx/%s", title_id, fn);
+        if (*fn == '/') {
+            snprintf(path, sizeof(path), "/atmosphere/titles/%016lx%s", title_id, fn);
+        } else {
+            snprintf(path, sizeof(path), "/atmosphere/titles/%016lx/%s", title_id, fn);
+        }
     }
     return fsFsOpenFile(&g_sd_filesystem, path, flags, out);
 }
@@ -84,10 +101,23 @@ Result Utils::OpenSdDirForAtmosphere(u64 title_id, const char *path, FsDir *out)
     }
     
     char safe_path[FS_MAX_PATH];
-    if (*path == '/') {
-        snprintf(safe_path, sizeof(safe_path), "/atmosphere/titles/%016lx%s", title_id, path);
+
+    u64 replace_tid = optionalTitle();
+    if(replace_tid == title_id) {
+        char subpath[50] = "";
+        optionalPath(subpath);
+       
+        if (*path == '/') {
+            snprintf(safe_path, sizeof(safe_path), "/%s%s", subpath, path);
+        } else {
+            snprintf(safe_path, sizeof(safe_path), "/%s/%s", subpath, path);
+        }
     } else {
-        snprintf(safe_path, sizeof(safe_path), "/atmosphere/titles/%016lx/%s", title_id, path);
+        if (*path == '/') {
+            snprintf(safe_path, sizeof(safe_path), "/atmosphere/titles/%016lx%s", title_id, path);
+        } else {
+            snprintf(safe_path, sizeof(safe_path), "/atmosphere/titles/%016lx/%s", title_id, path);
+        }
     }
     return fsFsOpenDirectory(&g_sd_filesystem, safe_path, FS_DIROPEN_DIRECTORY | FS_DIROPEN_FILE, out);
 }
@@ -104,20 +134,48 @@ Result Utils::OpenRomFSSdDir(u64 title_id, const char *path, FsDir *out) {
 
 Result Utils::OpenRomFSFile(FsFileSystem *fs, u64 title_id, const char *fn, int flags, FsFile *out) {
     char path[FS_MAX_PATH];
-    if (*fn == '/') {
-        snprintf(path, sizeof(path), "/atmosphere/titles/%016lx/romfs%s", title_id, fn);
+    EnsureInitialized();
+
+    u64 replace_tid = optionalTitle();
+    if(replace_tid == title_id) {
+        char subpath[50] = "";
+        optionalPath(subpath);
+       
+        if (*fn == '/') {
+            snprintf(path, sizeof(path), "/%s/romfs%s", subpath, fn);
+        } else {
+            snprintf(path, sizeof(path), "/%s/romfs/%s", subpath, fn);
+        }
     } else {
-        snprintf(path, sizeof(path), "/atmosphere/titles/%016lx/romfs/%s", title_id, fn);
+        if (*fn == '/') {
+            snprintf(path, sizeof(path), "/atmosphere/titles/%016lx/romfs%s", title_id, fn);
+        } else {
+            snprintf(path, sizeof(path), "/atmosphere/titles/%016lx/romfs/%s", title_id, fn);
+        }
     }
     return fsFsOpenFile(fs, path, flags, out);
 }
 
 Result Utils::OpenRomFSDir(FsFileSystem *fs, u64 title_id, const char *path, FsDir *out) {
     char safe_path[FS_MAX_PATH];
-    if (*path == '/') {
-        snprintf(safe_path, sizeof(safe_path), "/atmosphere/titles/%016lx/romfs%s", title_id, path);
-    } else {
-        snprintf(safe_path, sizeof(safe_path), "/atmosphere/titles/%016lx/romfs/%s", title_id, path);
+    EnsureInitialized();
+    
+    u64 replace_tid = optionalTitle();
+    if(replace_tid == title_id) {
+        char subpath[50] = "";
+        optionalPath(subpath);
+       
+        if (*path == '/') {
+            snprintf(safe_path, sizeof(safe_path), "/%s/romfs%s", subpath, path);
+        } else {
+            snprintf(safe_path, sizeof(safe_path), "/%s/romfs/%s", subpath, path);
+        }
+    }  else {
+        if (*path == '/') {
+            snprintf(safe_path, sizeof(safe_path), "/atmosphere/titles/%016lx/romfs%s", title_id, path);
+        } else {
+            snprintf(safe_path, sizeof(safe_path), "/atmosphere/titles/%016lx/romfs/%s", title_id, path);
+        }
     }
     return fsFsOpenDirectory(fs, safe_path, FS_DIROPEN_DIRECTORY | FS_DIROPEN_FILE, out);
 }

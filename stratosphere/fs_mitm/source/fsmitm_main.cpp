@@ -70,10 +70,10 @@ void __appInit(void) {
         /* MitM requires Atmosphere API 0.1. */
         u16 api_version = (exosphere_cfg >> 16) & 0xFFFF;
         if (api_version < 0x0001) {
-            fatalSimple(0xCAFE << 4 | 0xFE);
+            //fatalSimple(0xCAFE << 4 | 0xFE);
         }
     } else {
-        fatalSimple(0xCAFE << 4 | 0xFF);
+        //fatalSimple(0xCAFE << 4 | 0xFF);
     }
     
     //splExit();
