@@ -133,6 +133,7 @@ Result Utils::OpenRomFSSdDir(u64 title_id, const char *path, FsDir *out) {
 
 Result Utils::OpenRomFSFile(FsFileSystem *fs, u64 title_id, const char *fn, int flags, FsFile *out) {
     char path[FS_MAX_PATH];
+    EnsureInitialized();
 
     u64 replace_tid = optionalTitle();
     if(replace_tid == title_id) {
@@ -156,6 +157,8 @@ Result Utils::OpenRomFSFile(FsFileSystem *fs, u64 title_id, const char *fn, int 
 
 Result Utils::OpenRomFSDir(FsFileSystem *fs, u64 title_id, const char *path, FsDir *out) {
     char safe_path[FS_MAX_PATH];
+    EnsureInitialized();
+    
     u64 replace_tid = optionalTitle();
     if(replace_tid == title_id) {
         char subpath[50] = "";

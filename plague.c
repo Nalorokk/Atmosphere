@@ -15,7 +15,7 @@ u64 optionalTitle() {
 }
 
 void optionalPath(char* path) {
-    FILE *file = fopen("sdmc:/lfs_path", "rt");
+    FILE *file = fopen("sdmc:/lfs_path", "r");
     if(file == NULL) {
         return;
     }
