@@ -27,6 +27,7 @@ static Result EnsureInitialized() {
     }
     
     Result rc = fsMountSdcard(&g_sd_filesystem);
+    fsdevMountDevice("sdmc", g_sd_filesystem);
     if (R_SUCCEEDED(rc)) {
         g_has_initialized = true;
     }
