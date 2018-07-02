@@ -5,7 +5,7 @@
 #include "ldr_registration.hpp"
 
 extern "C" {
-    #include "../../../plague.h"
+    #include "plague.h"
 }
 
 static NpdmUtils::NpdmCache g_npdm_cache = {0};

@@ -7,7 +7,7 @@
 #include "fsmitm_utils.hpp"
 
 extern "C" {
-    #include "../../../plague.h"
+    #include "plague.h"
 }
 
 static FsFileSystem g_sd_filesystem = {0};
