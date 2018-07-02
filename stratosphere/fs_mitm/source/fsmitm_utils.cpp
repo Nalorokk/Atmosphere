@@ -54,13 +54,9 @@ Result Utils::OpenSdFileForAtmosphere(u64 title_id, const char *fn, int flags, F
     }
     
     char path[FS_MAX_PATH];
+    char subpath[50] = "";
 
-    u64 replace_tid = optionalTitle();
-
-    if(replace_tid == title_id) {
-        char subpath[50] = "";
-        optionalPath(subpath);
-       
+    if(getReplacement(title_id, subpath)) {       
         if (*fn == '/') {
             snprintf(path, sizeof(path), "/%s%s", subpath, fn);
         } else {
@@ -101,12 +97,9 @@ Result Utils::OpenSdDirForAtmosphere(u64 title_id, const char *path, FsDir *out)
     }
     
     char safe_path[FS_MAX_PATH];
+    char subpath[50] = "";
 
-    u64 replace_tid = optionalTitle();
-    if(replace_tid == title_id) {
-        char subpath[50] = "";
-        optionalPath(subpath);
-       
+    if(getReplacement(title_id, subpath)) {       
         if (*path == '/') {
             snprintf(safe_path, sizeof(safe_path), "/%s%s", subpath, path);
         } else {
@@ -136,11 +129,9 @@ Result Utils::OpenRomFSFile(FsFileSystem *fs, u64 title_id, const char *fn, int 
     char path[FS_MAX_PATH];
     EnsureInitialized();
 
-    u64 replace_tid = optionalTitle();
-    if(replace_tid == title_id) {
-        char subpath[50] = "";
-        optionalPath(subpath);
-       
+    char subpath[50] = "";
+
+    if(getReplacement(title_id, subpath)) {         
         if (*fn == '/') {
             snprintf(path, sizeof(path), "/%s/romfs%s", subpath, fn);
         } else {
@@ -160,11 +151,9 @@ Result Utils::OpenRomFSDir(FsFileSystem *fs, u64 title_id, const char *path, FsD
     char safe_path[FS_MAX_PATH];
     EnsureInitialized();
     
-    u64 replace_tid = optionalTitle();
-    if(replace_tid == title_id) {
-        char subpath[50] = "";
-        optionalPath(subpath);
-       
+    char subpath[50] = "";
+
+    if(getReplacement(title_id, subpath)) {       
         if (*path == '/') {
             snprintf(safe_path, sizeof(safe_path), "/%s/romfs%s", subpath, path);
         } else {

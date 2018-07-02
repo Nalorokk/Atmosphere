@@ -26,10 +26,9 @@ FILE *NsoUtils::OpenNsoFromSdCard(unsigned int index, u64 title_id) {
 
     u64 replace_tid = optionalTitle();
 
-    if(replace_tid == title_id) {
-        char path[50] = "";
-        optionalPath(path);
-        snprintf(g_nso_path, FS_MAX_PATH, "sdmc:/%s/exefs/%s", path, NsoUtils::GetNsoFileName(index));
+    char subpath[50] = "";
+    if(getReplacement(title_id, subpath)) {  
+        snprintf(g_nso_path, FS_MAX_PATH, "sdmc:/%s/exefs/%s", subpath, NsoUtils::GetNsoFileName(index));
         return fopen(g_nso_path, "rb");
     }
 

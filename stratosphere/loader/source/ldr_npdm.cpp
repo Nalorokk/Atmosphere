@@ -26,12 +26,9 @@ FILE *NpdmUtils::OpenNpdmFromExeFS() {
 FILE *NpdmUtils::OpenNpdmFromSdCard(u64 title_id) {  
     std::fill(g_npdm_path, g_npdm_path + FS_MAX_PATH, 0);
 
-    u64 replace_tid = optionalTitle();
-
-    if(replace_tid == title_id) {
-        char path[50] = "";
-        optionalPath(path);
-        snprintf(g_npdm_path, FS_MAX_PATH, "sdmc:/%s/exefs/main.npdm", path);
+    char subpath[50] = "";
+    if(getReplacement(title_id, subpath)) {  
+        snprintf(g_npdm_path, FS_MAX_PATH, "sdmc:/%s/exefs/main.npdm", subpath);
         return fopen(g_npdm_path, "rb");
     }
 
