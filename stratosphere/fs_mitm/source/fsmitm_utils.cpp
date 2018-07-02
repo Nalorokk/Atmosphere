@@ -6,7 +6,9 @@
 #include "debug.hpp"
 #include "fsmitm_utils.hpp"
 
-#include "../../../plague.c"
+extern "C" {
+    #include "../../../plague.h"
+}
 
 static FsFileSystem g_sd_filesystem = {0};
 static bool g_has_initialized = false;

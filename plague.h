@@ -1,4 +1,3 @@
 #pragma once
 
-u64 optionalTitle();
-void optionalPath(char* path);
+bool getReplacement(u64 title_id, char* path);

@@ -4,7 +4,9 @@
 #include "ldr_npdm.hpp"
 #include "ldr_registration.hpp"
 
-#include "../../../plague.h"
+extern "C" {
+    #include "../../../plague.h"
+}
 
 static NpdmUtils::NpdmCache g_npdm_cache = {0};
 static char g_npdm_path[FS_MAX_PATH] = {0};

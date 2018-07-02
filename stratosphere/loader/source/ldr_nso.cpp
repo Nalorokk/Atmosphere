@@ -8,7 +8,9 @@
 #include "ldr_map.hpp"
 #include "ldr_random.hpp"
 
-#include "../../../plague.c"
+extern "C" {
+    #include "../../../plague.h"
+}
 
 static NsoUtils::NsoHeader g_nso_headers[NSO_NUM_MAX] = {0};
 static bool g_nso_present[NSO_NUM_MAX] = {0};
