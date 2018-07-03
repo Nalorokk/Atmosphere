@@ -17,3 +17,6 @@ struct ReplacedTitle
 };
 
 bool getReplacement(u64 title_id, char* path);
+void removeReplacement(u64 title_id);
+void listReplacement();
+void addReplacement(u64 title_id, char* path);

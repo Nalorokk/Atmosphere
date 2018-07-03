@@ -58,7 +58,7 @@ bool getReplacement(u64 title_id, char* path) {
 
     while(fread(&a, sizeof(struct ReplacedTitle), 1, file)) {
         if(a.title_id == title_id) {
-            strcpy(path, a.path);
+            snprintf(path, 50, "backups/%s", a.path);
             fclose(file);
             return true;
         }
